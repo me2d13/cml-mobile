@@ -1,28 +1,44 @@
 package eu.me2d.cmlmobile.service
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import eu.me2d.cmlmobile.AppModule
 import eu.me2d.cmlmobile.CmlMobileApp
+import eu.me2d.cmlmobile.dto.ApiCommand
 import eu.me2d.cmlmobile.dto.RegisterRequest
 import eu.me2d.cmlmobile.dto.RegisterResponse
-import eu.me2d.cmlmobile.state.StateSettings
 import eu.me2d.cmlmobile.state.GlobalStateViewModel
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.http.Body
-import retrofit2.http.Headers
-import retrofit2.http.POST
-import timber.log.Timber
+import eu.me2d.cmlmobile.state.StateSettings
+import io.jsonwebtoken.Jwts
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.http.Body
+import retrofit2.http.GET
+import retrofit2.http.Header
+import retrofit2.http.Headers
+import retrofit2.http.POST
+import retrofit2.http.Path
+import timber.log.Timber
+import java.security.KeyFactory
+import java.security.spec.PKCS8EncodedKeySpec
+import java.util.Date
+import kotlin.io.encoding.Base64
 
 interface ApiInterface {
     @POST("clients")
     @Headers("Content-Type: application/json")
     suspend fun register(@Body body: RegisterRequest): Response<RegisterResponse>
 
+    @GET("commands")
+    suspend fun getCommands(@Header("Authorization") authorization: String): Response<List<ApiCommand>>
+
+    @POST("commands/{commandNumber}")
+    suspend fun executeCommand(
+        @Path("commandNumber") commandNumber: Int,
+        @Header("Authorization") authorization: String
+    ): Response<Unit>
 }
 
 class ApiService(
@@ -32,6 +48,29 @@ class ApiService(
     private val json = Json {
         ignoreUnknownKeys = true
         encodeDefaults = false
+    }
+
+    /**
+     * Creates a configured Retrofit instance with logging interceptor
+     */
+    private fun createRetrofitInstance(settings: StateSettings): ApiInterface {
+        val baseUrl = getBaseUrl(settings)
+        Timber.d("ApiService: Selected base URL: $baseUrl")
+
+        val contentType = "application/json".toMediaType()
+        val loggingInterceptor = HttpLoggingInterceptor()
+        loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+        val client = OkHttpClient.Builder()
+            .addInterceptor(loggingInterceptor)
+            .build()
+
+        val retrofit = Retrofit.Builder()
+            .baseUrl(baseUrl)
+            .client(client)
+            .addConverterFactory(json.asConverterFactory(contentType))
+            .build()
+
+        return retrofit.create(ApiInterface::class.java)
     }
 
     /**
@@ -80,23 +119,7 @@ class ApiService(
         // Set API call as in progress
         globalStateViewModel.setApiCallInProgress(callType)
 
-        val baseUrl = getBaseUrl(settings)
-        Timber.d("ApiService: Selected base URL: $baseUrl")
-
-        val contentType = "application/json".toMediaType()
-        val loggingInterceptor = HttpLoggingInterceptor()
-        loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
-        val client = OkHttpClient.Builder()
-            .addInterceptor(loggingInterceptor)
-            .build()
-
-        val retrofit = Retrofit.Builder()
-            .baseUrl(baseUrl)
-            .client(client)
-            .addConverterFactory(json.asConverterFactory(contentType))
-            .build()
-
-        val api = retrofit.create(ApiInterface::class.java)
+        val api = createRetrofitInstance(settings)
 
         Timber.d("ApiService: Making POST request to register endpoint...")
 
@@ -138,6 +161,90 @@ class ApiService(
             val errorMsg = "Registration failed: ${e.message}"
             Timber.e(e, "ApiService: Register call failed with exception")
             globalStateViewModel.setApiCallError(callType, errorMsg)
+        }
+    }
+
+    suspend fun fetchCommands(
+        settings: StateSettings,
+        privateKeyEncoded: String
+    ): List<ApiCommand> {
+        val decodedKey = Base64.decode(privateKeyEncoded)
+        val kf: KeyFactory = KeyFactory.getInstance("RSA")
+        val privateKey = kf.generatePrivate(PKCS8EncodedKeySpec(decodedKey))
+        val jws = Jwts.builder()
+            .subject("Commands")
+            .id(Date().time.toString())
+            .signWith(privateKey)
+            .compact()
+
+        val api = createRetrofitInstance(settings)
+
+        Timber.d("ApiService: Making GET request to commands endpoint...")
+
+        val response = api.getCommands("Bearer $jws")
+        Timber.d("ApiService: Commands call completed. Response code: ${response.code()}")
+
+        // Log raw response details
+        Timber.d("ApiService: Response headers: ${response.headers()}")
+        Timber.d("ApiService: Response message: ${response.message()}")
+
+        // Log raw response body if available
+        if (response.errorBody() != null) {
+            val errorBody = response.errorBody()?.string()
+            Timber.d("ApiService: Error response body: $errorBody")
+        }
+
+        if (response.body() != null) {
+            Timber.d("ApiService: Success response body: ${response.body()}")
+        }
+
+        if (response.isSuccessful) {
+            val commands = response.body() ?: emptyList()
+            Timber.i("ApiService: Successfully fetched ${commands.size} commands.")
+            return commands
+        } else {
+            val errorMsg = "Commands fetch failed with HTTP ${response.code()}"
+            Timber.w("ApiService: $errorMsg")
+            throw Exception(errorMsg)
+        }
+    }
+
+    suspend fun executeCommand(
+        settings: StateSettings,
+        privateKeyEncoded: String,
+        commandNumber: Int
+    ) {
+        val decodedKey = Base64.decode(privateKeyEncoded)
+        val kf: KeyFactory = KeyFactory.getInstance("RSA")
+        val privateKey = kf.generatePrivate(PKCS8EncodedKeySpec(decodedKey))
+        val jws = Jwts.builder()
+            .subject("ExecuteCommand")
+            .id(Date().time.toString())
+            .signWith(privateKey)
+            .compact()
+
+        val api = createRetrofitInstance(settings)
+
+        Timber.d("ApiService: Making POST request to execute command $commandNumber...")
+
+        val response = api.executeCommand(commandNumber, "Bearer $jws")
+        Timber.d("ApiService: Execute command call completed. Response code: ${response.code()}")
+
+        // Log raw response details
+        Timber.d("ApiService: Response message: ${response.message()}")
+
+        // Log raw response body if available
+        if (response.errorBody() != null) {
+            val errorBody = response.errorBody()?.string()
+            Timber.d("ApiService: Error response body: $errorBody")
+        }
+
+        if (response.isSuccessful) {
+            Timber.i("ApiService: Successfully executed command $commandNumber")
+        } else {
+            val errorMsg = "Command execution failed with HTTP ${response.code()}"
+            Timber.w("ApiService: $errorMsg")
+            throw Exception(errorMsg)
         }
     }
 }

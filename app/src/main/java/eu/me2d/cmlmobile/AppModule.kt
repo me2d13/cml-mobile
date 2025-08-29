@@ -4,8 +4,8 @@ import android.content.Context
 import eu.me2d.cmlmobile.service.ApiService
 import eu.me2d.cmlmobile.service.CryptoService
 import eu.me2d.cmlmobile.service.HistoryService
-import eu.me2d.cmlmobile.service.StorageService
 import eu.me2d.cmlmobile.service.NetworkService
+import eu.me2d.cmlmobile.service.StorageService
 
 interface AppModule {
     val storageService: StorageService

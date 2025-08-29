@@ -5,24 +5,29 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.ui.Modifier
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.Alignment
-import timber.log.Timber
+import eu.me2d.cmlmobile.state.Command
 import eu.me2d.cmlmobile.state.GlobalStateViewModel
-import eu.me2d.cmlmobile.screen.RegistrationRequiredHint
+import timber.log.Timber
 
 @Composable
 fun DialScreen(
@@ -35,7 +40,25 @@ fun DialScreen(
         RegistrationRequiredHint()
         return
     }
-    var currentNumber by remember { mutableStateOf("") }
+    val commands = globalStateViewModel.state.collectAsState().value.commands.sortedBy { it.number }
+
+    DialScreenContent(
+        commands = commands,
+        onSecretCode = onSecretCode,
+        onExecuteCommand = { commandNumber ->
+            globalStateViewModel.executeCommand(commandNumber)
+        }
+    )
+}
+
+@Composable
+fun DialScreenContent(
+    commands: List<Command>,
+    onSecretCode: (() -> Unit)? = null,
+    onExecuteCommand: (Int) -> Unit
+) {
+    var currentNumber by rememberSaveable { mutableStateOf("") }
+
     Column {
         Display(currentNumber)
         DialPad { number ->
@@ -51,11 +74,61 @@ fun DialScreen(
                     val commandNumber = currentNumber.toIntOrNull() ?: -1
                     Timber.i("Going to execute command $currentNumber")
                     currentNumber = ""
-                    globalStateViewModel.executeCommand(commandNumber)
+                    onExecuteCommand(commandNumber)
                 }
             } else {
                 currentNumber += number
             }
+        }
+
+        // Available Commands List (moved below dial pad)
+        if (commands.isNotEmpty()) {
+            Text(
+                text = "Available Commands:",
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
+            )
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .background(Color(0xFFF5F5F5))
+                    .padding(horizontal = 16.dp, vertical = 4.dp),
+                content = {
+                    items(commands) { command ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 8.dp, vertical = 2.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = command.number.toString(),
+                                style = MaterialTheme.typography.bodySmall,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier
+                                    .width(30.dp)
+                                    .padding(end = 8.dp)
+                            )
+                            Text(
+                                text = command.name,
+                                style = MaterialTheme.typography.bodySmall,
+                                maxLines = 1
+                            )
+                        }
+                    }
+                }
+            )
+        } else {
+            Text(
+                text = "No commands available. Register and fetch commands first.",
+                style = MaterialTheme.typography.bodySmall,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            )
         }
     }
 }
@@ -74,7 +147,7 @@ fun Display(number: String) {
             color = Color(0xFF00FF00),
             fontSize = 36.sp,
             textAlign = TextAlign.Center,
-            style = androidx.compose.material3.MaterialTheme.typography.bodyLarge
+            style = MaterialTheme.typography.bodyLarge
         )
     }
 }
@@ -99,7 +172,7 @@ fun DialPad(onPress: (String) -> Unit) {
                     ) {
                         Text(
                             text = label,
-                            style = androidx.compose.material3.MaterialTheme.typography.bodyLarge
+                            style = MaterialTheme.typography.bodyLarge
                         )
                     }
                 }
@@ -111,5 +184,18 @@ fun DialPad(onPress: (String) -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun DialScreenPreview() {
-    DialScreen(GlobalStateViewModel())
+    // Preview without ViewModel - show the UI components directly
+    val mockCommands = listOf(
+        Command(1, "Turn on lights"),
+        Command(2, "Turn off lights"),
+        Command(3, "Lock doors"),
+        Command(4, "Unlock doors"),
+        Command(5, "Start engine")
+    )
+
+    DialScreenContent(
+        commands = mockCommands,
+        onSecretCode = { /* Handle secret code press */ },
+        onExecuteCommand = { commandNumber -> Timber.i("Executing command $commandNumber") }
+    )
 }

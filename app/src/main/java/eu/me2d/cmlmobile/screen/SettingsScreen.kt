@@ -12,10 +12,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,16 +23,14 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import eu.me2d.cmlmobile.CmlMobileApp
 import eu.me2d.cmlmobile.state.GlobalState
-import eu.me2d.cmlmobile.state.StateSettings
 import eu.me2d.cmlmobile.state.GlobalStateViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import eu.me2d.cmlmobile.state.StateSettings
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.util.regex.PatternSyntaxException
 import java.time.Instant
-import java.time.format.DateTimeFormatter
 import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.regex.PatternSyntaxException
 
 @Composable
 fun SettingsScreen(viewModel: GlobalStateViewModel = viewModel()) {
@@ -61,8 +59,7 @@ fun SettingsScreen(viewModel: GlobalStateViewModel = viewModel()) {
             }
         },
         onGetCommands = {
-            // TODO: Implement getCommands method in viewModel
-            // viewModel.getCommands()
+            viewModel.getCommands()
         }
     )
 }

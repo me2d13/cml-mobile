@@ -1,9 +1,9 @@
 package eu.me2d.cmlmobile.state
 
-import java.time.Instant
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
+import java.time.Instant
 
 // Type aliases
 

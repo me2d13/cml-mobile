@@ -1,9 +1,9 @@
 package eu.me2d.cmlmobile
 
 import android.app.Application
-import timber.log.Timber
 import eu.me2d.cmlmobile.util.InMemoryLogStore
 import eu.me2d.cmlmobile.util.TimberMemoryTree
+import timber.log.Timber
 
 object LogMemoryStore {
     val instance = InMemoryLogStore()

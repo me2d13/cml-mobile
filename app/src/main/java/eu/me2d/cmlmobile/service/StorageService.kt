@@ -4,17 +4,17 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import eu.me2d.cmlmobile.state.GlobalState
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.modules.SerializersModule
-import kotlinx.serialization.modules.contextual
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
-import java.time.Instant
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.contextual
 import timber.log.Timber
+import java.time.Instant
 
 object InstantSerializer : KSerializer<Instant> {
     override val descriptor: SerialDescriptor =

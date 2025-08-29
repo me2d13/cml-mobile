@@ -12,3 +12,9 @@ data class RegisterRequest(
 data class RegisterResponse(
     val status: String?
 )
+
+@Serializable
+data class ApiCommand(
+    val number: Int,
+    val description: String
+)

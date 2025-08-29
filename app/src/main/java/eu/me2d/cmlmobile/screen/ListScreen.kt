@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import eu.me2d.cmlmobile.state.Command
 import eu.me2d.cmlmobile.state.GlobalStateViewModel
-import eu.me2d.cmlmobile.screen.RegistrationRequiredHint
 
 @Composable
 fun ListScreen(globalStateViewModel: GlobalStateViewModel) {
