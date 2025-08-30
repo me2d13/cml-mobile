@@ -13,17 +13,17 @@ import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.LocalDate
 
-class GlobalStateViewModel : ViewModel() {
-    private val _state = MutableStateFlow(CmlMobileApp.appModule.storageService.loadState())
-    val state: StateFlow<GlobalState> = _state
+open class GlobalStateViewModel : ViewModel() {
+    private val _state = MutableStateFlow(
+        CmlMobileApp.appModule.storageService.loadStateWithMigration(
+            CmlMobileApp.appModule.migrationService
+        )
+    )
+    open val state: StateFlow<GlobalState> = _state
 
     fun saveState(newState: GlobalState) {
         CmlMobileApp.appModule.storageService.saveState(newState)
         _state.value = newState
-    }
-
-    fun loadState() {
-        _state.value = CmlMobileApp.appModule.storageService.loadState()
     }
 
     fun executeCommand(commandNumber: Int) {

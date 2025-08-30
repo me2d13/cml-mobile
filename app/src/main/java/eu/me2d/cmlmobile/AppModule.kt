@@ -4,6 +4,7 @@ import android.content.Context
 import eu.me2d.cmlmobile.service.ApiService
 import eu.me2d.cmlmobile.service.CryptoService
 import eu.me2d.cmlmobile.service.HistoryService
+import eu.me2d.cmlmobile.service.MigrationService
 import eu.me2d.cmlmobile.service.NetworkService
 import eu.me2d.cmlmobile.service.StorageService
 
@@ -13,11 +14,15 @@ interface AppModule {
     val apiService: ApiService
     val networkService: NetworkService
     val cryptoService: CryptoService
+    val migrationService: MigrationService
 }
 
 class AppModuleImpl(
     private val appContext: Context
 ) : AppModule {
+    override val migrationService: MigrationService by lazy {
+        MigrationService(appContext)
+    }
     override val storageService: StorageService by lazy {
         StorageService(appContext)
     }

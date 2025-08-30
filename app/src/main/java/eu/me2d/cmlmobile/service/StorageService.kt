@@ -47,15 +47,40 @@ class StorageService(context: Context) {
         Timber.Forest.d("Saved global state")
     }
 
-    fun loadState(): GlobalState {
-        val jsonString = prefs.getString(key, null) ?: return GlobalState()
-        return try {
-            val state: GlobalState = json.decodeFromString(jsonString)
-            Timber.Forest.d("Loaded global state")
-            state
-        } catch (e: Exception) {
-            Timber.Forest.e(e, "Failed to decode global state")
-            GlobalState()
+    /**
+     * Load state with migration support from old app version
+     * Only performs migration if no new state exists (first launch)
+     */
+    fun loadStateWithMigration(migrationService: MigrationService): GlobalState {
+        val jsonString = prefs.getString(key, null)
+
+        return if (jsonString != null) {
+            // New state exists, load it normally (no migration needed)
+            try {
+                val state: GlobalState = json.decodeFromString(GlobalState.serializer(), jsonString)
+                Timber.Forest.d("Loaded existing global state")
+                state
+            } catch (e: Exception) {
+                Timber.Forest.e(e, "Failed to decode global state, using default")
+                GlobalState()
+            }
+        } else {
+            // No new state exists - this is first launch of new app version
+            if (migrationService.hasOldAppData()) {
+                Timber.Forest.i("First launch detected, attempting migration from old app")
+                Timber.Forest.d(migrationService.getMigrationSummary())
+
+                // Perform migration and save the result
+                val migratedState = migrationService.migrateFromOldApp()
+                saveState(migratedState)
+
+                Timber.Forest.i("Migration completed and state saved")
+                migratedState
+            } else {
+                // No old data either, use default state
+                Timber.Forest.d("First launch, no old data to migrate, using default state")
+                GlobalState()
+            }
         }
     }
 }
