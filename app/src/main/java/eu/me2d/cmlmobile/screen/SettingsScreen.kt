@@ -14,18 +14,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import eu.me2d.cmlmobile.CmlMobileApp
 import eu.me2d.cmlmobile.state.GlobalState
 import eu.me2d.cmlmobile.state.GlobalStateViewModel
 import eu.me2d.cmlmobile.state.StateSettings
-import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.Instant
 import java.time.ZoneId
@@ -35,7 +32,6 @@ import java.util.regex.PatternSyntaxException
 @Composable
 fun SettingsScreen(viewModel: GlobalStateViewModel = viewModel()) {
     val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
     val state = viewModel.state.collectAsState().value
 
     fun toGlobalState(settings: StateSettings) = GlobalState(
@@ -51,12 +47,7 @@ fun SettingsScreen(viewModel: GlobalStateViewModel = viewModel()) {
             Toast.makeText(context, "Settings saved", Toast.LENGTH_SHORT).show()
         },
         onRegister = { settings ->
-            coroutineScope.launch {
-                CmlMobileApp.appModule.apiService.register(
-                    settings = settings,
-                    globalStateViewModel = viewModel
-                )
-            }
+            viewModel.register(settings)
         },
         onGetCommands = {
             viewModel.getCommands()

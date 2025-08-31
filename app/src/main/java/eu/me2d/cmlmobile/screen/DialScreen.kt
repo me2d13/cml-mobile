@@ -93,7 +93,7 @@ fun DialScreenContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
-                    .background(Color(0xFFF5F5F5))
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
                     .padding(horizontal = 16.dp, vertical = 4.dp),
                 content = {
                     items(commands) { command ->
@@ -108,7 +108,7 @@ fun DialScreenContent(
                                 style = MaterialTheme.typography.bodySmall,
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier
-                                    .width(30.dp)
+                                    .width(40.dp)
                                     .padding(end = 8.dp)
                             )
                             Text(
@@ -172,7 +172,7 @@ fun DialPad(onPress: (String) -> Unit) {
                     ) {
                         Text(
                             text = label,
-                            style = MaterialTheme.typography.bodyLarge
+                            style = MaterialTheme.typography.headlineSmall
                         )
                     }
                 }

@@ -26,6 +26,8 @@ class NetworkService(private val context: Context) {
             val info = wifiManager.connectionInfo
             val ssid = info.ssid
             return ssid?.takeIf { it.isNotBlank() && it != "<unknown ssid>" }
+                ?.removePrefix("\"")  // Remove leading quote
+                ?.removeSuffix("\"")  // Remove trailing quote
         }
         return null
     }

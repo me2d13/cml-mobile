@@ -66,4 +66,11 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt-api:0.12.3")
     implementation("io.jsonwebtoken:jjwt-impl:0.12.3")
     implementation("io.jsonwebtoken:jjwt-jackson:0.12.3")
+
+    // Android Auto / Car App Library dependencies
+    implementation(libs.androidx.car.app)
+    implementation(libs.androidx.car.app.projected)
+    // Note: Removed app-automotive dependency to avoid manifest conflicts 
+    // since we only need Android Auto (projected) functionality
+    testImplementation(libs.androidx.car.app.testing)
 }

@@ -142,4 +142,19 @@ open class GlobalStateViewModel : ViewModel() {
             }
         }
     }
+
+    fun register(settings: StateSettings) {
+        setApiCallInProgress("register")
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                CmlMobileApp.appModule.apiService.register(
+                    settings = settings,
+                    globalStateViewModel = this@GlobalStateViewModel
+                )
+                // The success/error handling is done inside the ApiService.register method
+            } catch (e: Exception) {
+                setApiCallError("register", e.message ?: "Unknown error")
+            }
+        }
+    }
 }
