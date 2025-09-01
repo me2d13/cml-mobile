@@ -20,7 +20,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import eu.me2d.cmlmobile.state.GlobalState
 import eu.me2d.cmlmobile.state.GlobalStateViewModel
 import eu.me2d.cmlmobile.state.StateSettings
 import timber.log.Timber
@@ -34,7 +33,7 @@ fun SettingsScreen(viewModel: GlobalStateViewModel = viewModel()) {
     val context = LocalContext.current
     val state = viewModel.state.collectAsState().value
 
-    fun toGlobalState(settings: StateSettings) = GlobalState(
+    fun toGlobalState(settings: StateSettings) = state.copy(
         settings = settings,
     )
 
