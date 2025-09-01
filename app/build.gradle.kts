@@ -13,8 +13,8 @@ android {
         applicationId = "eu.me2d.cmlmobile"
         minSdk = 26
         targetSdk = 36
-        versionCode = 20000
-        versionName = "2.0.0"
+        versionCode = 20010
+        versionName = "2.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
