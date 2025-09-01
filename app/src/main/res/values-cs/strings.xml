@@ -1,0 +1,55 @@
+<resources>
+    <string name="app_name">Cml Aplikace</string>
+
+    <!-- Navigation -->
+    <string name="nav_pad">Klávesnice</string>
+    <string name="nav_list">Seznam</string>
+    <string name="nav_settings">Nastavení</string>
+    <string name="content_description_pad">Klávesnice</string>
+    <string name="content_description_list">Seznam</string>
+    <string name="content_description_settings">Nastavení</string>
+
+    <!-- Dial Screen -->
+    <string name="available_commands">Dostupné příkazy:</string>
+    <string name="no_commands_available">Žádné příkazy nejsou dostupné. Nejprve se zaregistrujte a načtěte příkazy.</string>
+
+    <!-- Settings Screen -->
+    <string name="api_url_label">API adresa</string>
+    <string name="my_id_label">Kdo jsem (pro schválení)</string>
+    <string name="wifi_pattern_label">Vzor názvu wifi</string>
+    <string name="wifi_url_label">Adresa přes wifi</string>
+    <string name="registered_on">Zaregistrováno dne %1$s</string>
+    <string name="not_yet_registered">Zatím nezaregistrováno</string>
+    <string name="save_button">Uložit</string>
+    <string name="register_button">Registrovat</string>
+    <string name="get_commands_button">Načíst příkazy</string>
+    <string name="settings_saved">Nastavení uloženo</string>
+
+    <!-- Registration Required -->
+    <string name="registration_required_title">Tato aplikace musí být zaregistrována!</string>
+    <string name="registration_required_subtitle">Registrujte se na obrazovce Nastavení.</string>
+    <string name="content_description_info">Informace</string>
+
+    <!-- API Status Messages -->
+    <string name="api_calling_format">Volání %1$s...</string>
+    <string name="api_success_default">Úspěch</string>
+    <string name="api_command_executed">Příkaz %1$d úspěšně proveden</string>
+    <string name="api_commands_fetched">Načteno %1$d příkazů</string>
+    <string name="api_unknown_error">Neznámá chyba</string>
+    <string name="content_description_success">Úspěch</string>
+    <string name="content_description_error">Chyba</string>
+
+    <!-- Car App Strings -->
+    <string name="car_registration_required_title">Vyžadována registrace</string>
+    <string name="car_registration_required_text">Prosím nejprve zaregistrujte své zařízení pomocí mobilní aplikace</string>
+    <string name="car_app_title">CML Mobile</string>
+    <string name="car_no_commands_title">Žádné příkazy nejsou dostupné</string>
+    <string name="car_no_commands_text">Žádné příkazy nebyly nalezeny. Obnovte je pomocí mobilní aplikace.</string>
+    <string name="car_commands_title">Příkazy</string>
+    <string name="car_confirm_command_title">Potvrdit příkaz</string>
+    <string name="car_execute_command_format">Provést příkaz %1$d - %2$s?</string>
+    <string name="car_confirm_title">Potvrdit</string>
+    <string name="car_execute_button">✓ Provést</string>
+    <string name="car_cancel_button">✕ Zrušit</string>
+    <string name="car_fallback_text">Prosím nejprve použijte mobilní aplikaci pro registraci</string>
+</resources>

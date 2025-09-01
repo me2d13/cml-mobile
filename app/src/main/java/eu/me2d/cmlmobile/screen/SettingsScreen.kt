@@ -17,9 +17,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import eu.me2d.cmlmobile.R
 import eu.me2d.cmlmobile.state.GlobalStateViewModel
 import eu.me2d.cmlmobile.state.StateSettings
 import timber.log.Timber
@@ -43,7 +45,8 @@ fun SettingsScreen(viewModel: GlobalStateViewModel = viewModel()) {
         registrationTimestamp = state.registrationTimestamp,
         onSaveSettings = { settings ->
             viewModel.saveState(toGlobalState(settings))
-            Toast.makeText(context, "Settings saved", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.settings_saved), Toast.LENGTH_SHORT)
+                .show()
         },
         onRegister = { settings ->
             viewModel.register(settings)
@@ -91,7 +94,7 @@ fun SettingsScreenContent(
         OutlinedTextField(
             value = apiUrl,
             onValueChange = { apiUrl = it },
-            label = { Text("API url") },
+            label = { Text(stringResource(R.string.api_url_label)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp)
@@ -99,7 +102,7 @@ fun SettingsScreenContent(
         OutlinedTextField(
             value = myId,
             onValueChange = { myId = it },
-            label = { Text("My id") },
+            label = { Text(stringResource(R.string.my_id_label)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp)
@@ -107,7 +110,7 @@ fun SettingsScreenContent(
         OutlinedTextField(
             value = wifiPattern,
             onValueChange = { wifiPattern = it },
-            label = { Text("Wifi name pattern") },
+            label = { Text(stringResource(R.string.wifi_pattern_label)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp)
@@ -115,7 +118,7 @@ fun SettingsScreenContent(
         OutlinedTextField(
             value = wifiUrl,
             onValueChange = { wifiUrl = it },
-            label = { Text("Url for wifi") },
+            label = { Text(stringResource(R.string.wifi_url_label)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp)
@@ -127,9 +130,9 @@ fun SettingsScreenContent(
                     .withZone(ZoneId.systemDefault())
                     .format(it)
             } ?: "Unknown"
-            Text(text = "Registered on $formattedTimestamp")
+            Text(text = stringResource(R.string.registered_on, formattedTimestamp))
         } else {
-            Text(text = "Not yet registered")
+            Text(text = stringResource(R.string.not_yet_registered))
         }
 
         Spacer(modifier = Modifier.padding(16.dp))
@@ -145,7 +148,7 @@ fun SettingsScreenContent(
                     .weight(1f)
                     .padding(end = 8.dp)
             ) {
-                Text("Save")
+                Text(stringResource(R.string.save_button))
             }
             Button(
                 onClick = {
@@ -156,7 +159,7 @@ fun SettingsScreenContent(
                 modifier = Modifier.weight(1f),
                 enabled = isValidUrl(apiUrl)
             ) {
-                Text("Register")
+                Text(stringResource(R.string.register_button))
             }
         }
         Button(
@@ -166,7 +169,7 @@ fun SettingsScreenContent(
                 .padding(top = 8.dp),
             enabled = isRegistered
         ) {
-            Text("Get Commands")
+            Text(stringResource(R.string.get_commands_button))
         }
     }
 }

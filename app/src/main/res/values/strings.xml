@@ -1,3 +1,55 @@
 <resources>
     <string name="app_name">Cml Application</string>
+
+    <!-- Navigation -->
+    <string name="nav_pad">Pad</string>
+    <string name="nav_list">List</string>
+    <string name="nav_settings">Settings</string>
+    <string name="content_description_pad">Pad</string>
+    <string name="content_description_list">List</string>
+    <string name="content_description_settings">Settings</string>
+
+    <!-- Dial Screen -->
+    <string name="available_commands">Available Commands:</string>
+    <string name="no_commands_available">No commands available. Register and fetch commands first.</string>
+
+    <!-- Settings Screen -->
+    <string name="api_url_label">API url</string>
+    <string name="my_id_label">My id</string>
+    <string name="wifi_pattern_label">Wifi name pattern</string>
+    <string name="wifi_url_label">Url for wifi</string>
+    <string name="registered_on">Registered on %1$s</string>
+    <string name="not_yet_registered">Not yet registered</string>
+    <string name="save_button">Save</string>
+    <string name="register_button">Register</string>
+    <string name="get_commands_button">Get Commands</string>
+    <string name="settings_saved">Settings saved</string>
+
+    <!-- Registration Required -->
+    <string name="registration_required_title">This app must be registered!</string>
+    <string name="registration_required_subtitle">Register at the Settings screen.</string>
+    <string name="content_description_info">Info</string>
+
+    <!-- API Status Messages -->
+    <string name="api_calling_format">Calling %1$s...</string>
+    <string name="api_success_default">Success</string>
+    <string name="api_command_executed">Command %1$d executed successfully</string>
+    <string name="api_commands_fetched">Fetched %1$d commands</string>
+    <string name="api_unknown_error">Unknown error</string>
+    <string name="content_description_success">Success</string>
+    <string name="content_description_error">Error</string>
+
+    <!-- Car App Strings -->
+    <string name="car_registration_required_title">Registration Required</string>
+    <string name="car_registration_required_text">Please register your device using the mobile app first</string>
+    <string name="car_app_title">CML Mobile</string>
+    <string name="car_no_commands_title">No Commands Available</string>
+    <string name="car_no_commands_text">No commands found. Please refresh using the mobile app.</string>
+    <string name="car_commands_title">Commands</string>
+    <string name="car_confirm_command_title">Confirm Command</string>
+    <string name="car_execute_command_format">Execute command %1$d - %2$s?</string>
+    <string name="car_confirm_title">Confirm</string>
+    <string name="car_execute_button">✓ Execute</string>
+    <string name="car_cancel_button">✕ Cancel</string>
+    <string name="car_fallback_text">Please use the mobile app to register first</string>
 </resources>

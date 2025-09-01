@@ -45,9 +45,9 @@ open class GlobalStateViewModel : ViewModel() {
 
                 val newState = currentState.copy(history = updatedHistory)
                 saveState(newState)
-                setApiCallSuccess("executeCommand", "Command $commandNumber executed successfully")
+                setApiCallSuccess("executeCommand", "api_command_executed|$commandNumber")
             } catch (e: Exception) {
-                setApiCallError("executeCommand", e.message ?: "Unknown error")
+                setApiCallError("executeCommand", e.message ?: "api_unknown_error")
             }
         }
     }
@@ -71,14 +71,14 @@ open class GlobalStateViewModel : ViewModel() {
         val current = _state.value
         val newApiState = ApiState(
             status = ApiCallStatus.IN_PROGRESS,
-            statusMessage = "Calling $callType...",
+            statusMessage = "api_calling_format|$callType",
             lastCallType = callType
         )
         val newState = current.copy(apiState = newApiState)
         saveState(newState)
     }
 
-    fun setApiCallSuccess(callType: String, message: String = "Success") {
+    fun setApiCallSuccess(callType: String, message: String = "api_success_default") {
         val current = _state.value
         val newApiState = ApiState(
             status = ApiCallStatus.SUCCESS,
@@ -136,9 +136,9 @@ open class GlobalStateViewModel : ViewModel() {
 
                 val newState = currentState.copy(commands = commands)
                 saveState(newState)
-                setApiCallSuccess("fetchCommands", "Fetched ${commands.size} commands")
+                setApiCallSuccess("fetchCommands", "api_commands_fetched|${commands.size}")
             } catch (e: Exception) {
-                setApiCallError("fetchCommands", e.message ?: "Unknown error")
+                setApiCallError("fetchCommands", e.message ?: "api_unknown_error")
             }
         }
     }
@@ -153,7 +153,7 @@ open class GlobalStateViewModel : ViewModel() {
                 )
                 // The success/error handling is done inside the ApiService.register method
             } catch (e: Exception) {
-                setApiCallError("register", e.message ?: "Unknown error")
+                setApiCallError("register", e.message ?: "api_unknown_error")
             }
         }
     }

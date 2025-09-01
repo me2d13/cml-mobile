@@ -20,11 +20,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import eu.me2d.cmlmobile.R
 import eu.me2d.cmlmobile.state.Command
 import eu.me2d.cmlmobile.state.GlobalStateViewModel
 import timber.log.Timber
@@ -84,7 +86,7 @@ fun DialScreenContent(
         // Available Commands List (moved below dial pad)
         if (commands.isNotEmpty()) {
             Text(
-                text = "Available Commands:",
+                text = stringResource(R.string.available_commands),
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
@@ -122,7 +124,7 @@ fun DialScreenContent(
             )
         } else {
             Text(
-                text = "No commands available. Register and fetch commands first.",
+                text = stringResource(R.string.no_commands_available),
                 style = MaterialTheme.typography.bodySmall,
                 textAlign = TextAlign.Center,
                 modifier = Modifier

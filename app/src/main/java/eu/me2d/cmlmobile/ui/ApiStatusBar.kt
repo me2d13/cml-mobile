@@ -9,7 +9,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,11 +29,46 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import eu.me2d.cmlmobile.R
 import eu.me2d.cmlmobile.state.ApiCallStatus
 import eu.me2d.cmlmobile.state.ApiState
 import kotlinx.coroutines.delay
+
+@Composable
+private fun getLocalizedApiMessage(message: String): String {
+    val context = LocalContext.current
+
+    return when {
+        message.startsWith("api_calling_format|") -> {
+            val callType = message.substringAfter("api_calling_format|")
+            context.getString(R.string.api_calling_format, callType)
+        }
+
+        message.startsWith("api_command_executed|") -> {
+            val commandNumber = message.substringAfter("api_command_executed|").toIntOrNull() ?: 0
+            context.getString(R.string.api_command_executed, commandNumber)
+        }
+
+        message.startsWith("api_commands_fetched|") -> {
+            val count = message.substringAfter("api_commands_fetched|").toIntOrNull() ?: 0
+            context.getString(R.string.api_commands_fetched, count)
+        }
+
+        message == "api_success_default" -> {
+            context.getString(R.string.api_success_default)
+        }
+
+        message == "api_unknown_error" -> {
+            context.getString(R.string.api_unknown_error)
+        }
+
+        else -> message // Return as-is if not a special format
+    }
+}
 
 @Composable
 fun ApiStatusBar(
@@ -121,7 +155,7 @@ fun ApiStatusBar(
                     ApiCallStatus.SUCCESS -> {
                         Icon(
                             imageVector = Icons.Default.CheckCircle,
-                            contentDescription = "Success",
+                            contentDescription = stringResource(R.string.content_description_success),
                             tint = contentColor,
                             modifier = Modifier
                                 .size(24.dp)
@@ -132,7 +166,7 @@ fun ApiStatusBar(
                     ApiCallStatus.ERROR -> {
                         Icon(
                             imageVector = Icons.Default.Warning,
-                            contentDescription = "Error",
+                            contentDescription = stringResource(R.string.content_description_error),
                             tint = contentColor,
                             modifier = Modifier
                                 .size(24.dp)
@@ -146,7 +180,7 @@ fun ApiStatusBar(
                 }
 
                 Text(
-                    text = apiState.statusMessage,
+                    text = getLocalizedApiMessage(apiState.statusMessage),
                     style = MaterialTheme.typography.bodySmall,
                     color = contentColor
                 )

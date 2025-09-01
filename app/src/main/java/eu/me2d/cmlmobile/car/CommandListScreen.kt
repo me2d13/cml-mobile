@@ -8,6 +8,7 @@ import androidx.car.app.model.ListTemplate
 import androidx.car.app.model.Row
 import androidx.car.app.model.Template
 import eu.me2d.cmlmobile.CmlMobileApp
+import eu.me2d.cmlmobile.R
 import eu.me2d.cmlmobile.state.Command
 import eu.me2d.cmlmobile.state.GlobalState
 import kotlinx.coroutines.CoroutineScope
@@ -65,14 +66,14 @@ class CommandListScreen(carContext: CarContext) : Screen(carContext) {
                 ItemList.Builder()
                     .addItem(
                         Row.Builder()
-                            .setTitle("Registration Required")
-                            .addText("Please register your device using the mobile app first")
+                            .setTitle(carContext.getString(R.string.car_registration_required_title))
+                            .addText(carContext.getString(R.string.car_registration_required_text))
                             .build()
                     )
                     .build()
             )
             .setHeaderAction(Action.APP_ICON)
-            .setTitle("CML Mobile")
+            .setTitle(carContext.getString(R.string.car_app_title))
             .build()
     }
 
@@ -82,8 +83,8 @@ class CommandListScreen(carContext: CarContext) : Screen(carContext) {
         if (commands.isEmpty()) {
             listBuilder.addItem(
                 Row.Builder()
-                    .setTitle("No Commands Available")
-                    .addText("No commands found. Please refresh using the mobile app.")
+                    .setTitle(carContext.getString(R.string.car_no_commands_title))
+                    .addText(carContext.getString(R.string.car_no_commands_text))
                     .build()
             )
         } else {
@@ -95,7 +96,7 @@ class CommandListScreen(carContext: CarContext) : Screen(carContext) {
         return ListTemplate.Builder()
             .setSingleList(listBuilder.build())
             .setHeaderAction(Action.APP_ICON)
-            .setTitle("Commands")
+            .setTitle(carContext.getString(R.string.car_commands_title))
             .build()
     }
 
@@ -114,20 +115,21 @@ class CommandListScreen(carContext: CarContext) : Screen(carContext) {
     }
 
     private fun createConfirmationTemplate(command: Command): Template {
-        val message = "Execute command ${command.number} - ${command.name}?"
+        val message =
+            carContext.getString(R.string.car_execute_command_format, command.number, command.name)
 
         return ListTemplate.Builder()
             .setSingleList(
                 ItemList.Builder()
                     .addItem(
                         Row.Builder()
-                            .setTitle("Confirm Command")
+                            .setTitle(carContext.getString(R.string.car_confirm_command_title))
                             .addText(message)
                             .build()
                     )
                     .addItem(
                         Row.Builder()
-                            .setTitle("✓ Execute")
+                            .setTitle(carContext.getString(R.string.car_execute_button))
                             .setOnClickListener {
                                 executeCommand(command.number)
                                 pendingCommand = null
@@ -138,7 +140,7 @@ class CommandListScreen(carContext: CarContext) : Screen(carContext) {
                     )
                     .addItem(
                         Row.Builder()
-                            .setTitle("✕ Cancel")
+                            .setTitle(carContext.getString(R.string.car_cancel_button))
                             .setOnClickListener {
                                 pendingCommand = null
                                 showingConfirmation = false
@@ -148,7 +150,7 @@ class CommandListScreen(carContext: CarContext) : Screen(carContext) {
                     )
                     .build()
             )
-            .setTitle("Confirm")
+            .setTitle(carContext.getString(R.string.car_confirm_title))
             .build()
     }
 
@@ -158,14 +160,14 @@ class CommandListScreen(carContext: CarContext) : Screen(carContext) {
                 ItemList.Builder()
                     .addItem(
                         Row.Builder()
-                            .setTitle("CML Mobile")
-                            .addText("Please use the mobile app to register first")
+                            .setTitle(carContext.getString(R.string.car_app_title))
+                            .addText(carContext.getString(R.string.car_fallback_text))
                             .build()
                     )
                     .build()
             )
             .setHeaderAction(Action.APP_ICON)
-            .setTitle("CML Mobile")
+            .setTitle(carContext.getString(R.string.car_app_title))
             .build()
     }
 

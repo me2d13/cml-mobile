@@ -19,6 +19,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -63,26 +64,26 @@ class MainActivity : ComponentActivity() {
                                         when (item) {
                                             Dial -> Icon(
                                                 Icons.Filled.Home,
-                                                contentDescription = "Pad"
+                                                contentDescription = stringResource(R.string.content_description_pad)
                                             )
 
                                             List -> Icon(
                                                 Icons.Filled.Menu,
-                                                contentDescription = "List"
+                                                contentDescription = stringResource(R.string.content_description_list)
                                             )
 
                                             Settings -> Icon(
                                                 Icons.Filled.Settings,
-                                                contentDescription = "Settings"
+                                                contentDescription = stringResource(R.string.content_description_settings)
                                             )
                                         }
                                     },
                                     label = {
                                         Text(
                                             when (item) {
-                                                Dial -> "Pad"
-                                                List -> "List"
-                                                Settings -> "Settings"
+                                                Dial -> stringResource(R.string.nav_pad)
+                                                List -> stringResource(R.string.nav_list)
+                                                Settings -> stringResource(R.string.nav_settings)
                                                 else -> ""
                                             }
                                         )
