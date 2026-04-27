@@ -49,18 +49,18 @@ fun ListScreenContent(commands: List<Command>, onClick: (Int) -> Unit) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable { onClick(command.number) }
-                        .padding(vertical = 8.dp),
+                        .padding(vertical = 12.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
                         text = command.number.toString(),
-                        fontSize = 32.sp,
+                        fontSize = 48.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(end = 16.dp)
                     )
                     Text(
                         text = command.name,
-                        fontSize = 20.sp,
+                        fontSize = 26.sp,
                         style = MaterialTheme.typography.bodyLarge
                     )
                 }
